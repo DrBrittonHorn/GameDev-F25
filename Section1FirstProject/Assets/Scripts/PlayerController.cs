@@ -13,10 +13,13 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     [SerializeField]
     private float speed;
+    private Vector2 startPosition;
+    public int coinsCollected;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        startPosition = transform.position;
     }
 
     void FixedUpdate()
@@ -59,5 +62,34 @@ public class PlayerController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Triggered by: " + collision.name);
+        if (collision.CompareTag("Collectible"))
+        {
+            coinsCollected++;
+            Debug.Log("Coins Collected: " + coinsCollected);
+            Destroy(collision.gameObject);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Collided with: " + collision.collider.name);
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            Debug.Log("Hit by an enemy!");
+            Respawn();
+        }
+        if (collision.collider.CompareTag("Respawn"))
+        {
+            Debug.Log("Fell off the level!");
+            Respawn();
+        }
+    }
+
+    void Respawn()
+    {
+        transform.position = startPosition;
+        rb.linearVelocity = Vector2.zero;
+        isJumping = false;
+        movement = 0f;
     }
 }

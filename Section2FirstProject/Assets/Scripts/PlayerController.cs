@@ -12,10 +12,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float speed;
     public float jumpForce;
+    private Vector2 spawnLoc;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        spawnLoc = transform.position;
     }
 
     void FixedUpdate()
@@ -60,5 +62,36 @@ public class PlayerController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("triggered by " + collision.name);
+        if (collision.CompareTag("Collectible"))
+        {
+            Destroy(collision.gameObject);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            Debug.Log("Ouch!");
+            Respawn();
+        }
+        if (collision.collider.CompareTag("Respawn"))
+        {
+            Debug.Log("You fell!");
+            Respawn();
+        }
+        if (collision.collider.CompareTag("Finish"))
+        {
+            Debug.Log("You win!");
+            Respawn();
+        }
+    }
+
+    void Respawn()
+    {
+        transform.position = spawnLoc;
+        rb.linearVelocity = Vector2.zero;
+        isJumping = false;
+        movement = 0;
     }
 }

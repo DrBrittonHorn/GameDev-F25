@@ -20,7 +20,8 @@ public class CoinGenerator : MonoBehaviour
         while (numberOfCoins-- > 0)
         {
             Vector2 spawnPosition = spawnStart;
-            Instantiate(coinPrefab, spawnPosition, Quaternion.identity, transform);
+            GameObject newObj = Instantiate(coinPrefab, spawnPosition, Quaternion.identity, transform);
+            newObj.name = "Coin_" + numberOfCoins;
             spawnStart += Vector2.right * spawnDistance;
             yield return new WaitForSeconds(1f);
         }
