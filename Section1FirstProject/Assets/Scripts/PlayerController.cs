@@ -1,4 +1,5 @@
 
+using Unity.VisualScripting;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -61,22 +62,33 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Triggered by: " + collision.name);
-        if (collision.CompareTag("Collectible"))
+        //Debug.Log("Triggered by: " + collision.name);
+        if (collision.CompareTag("Collectable"))
         {
             coinsCollected++;
-            Debug.Log("Coins Collected: " + coinsCollected);
+            //Debug.Log("Coins Collected: " + coinsCollected);
             Destroy(collision.gameObject);
         }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collided with: " + collision.collider.name);
+        //Debug.Log("Collided with: " + collision.collider.name);
         if (collision.collider.CompareTag("Enemy"))
         {
-            Debug.Log("Hit by an enemy!");
-            Respawn();
+            //if (collision.otherCollider.GetType().Equals(typeof(EdgeCollider2D)))
+            Debug.Log(collision.collider.GetType());
+            if (collision.collider is EdgeCollider2D)
+            {
+                Debug.Log("Jumped on an enemy!");
+                collision.gameObject.SetActive(false);
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                Debug.Log("Hit by an enemy!");
+                Respawn();
+            }
         }
         if (collision.collider.CompareTag("Respawn"))
         {

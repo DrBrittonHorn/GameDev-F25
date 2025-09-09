@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
     void OnJump(InputValue value)
     {
+        Debug.Log("jumping");
         if (!isJumping && value.isPressed && isGrounded())
         {
             isJumping = true;
@@ -72,8 +73,18 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.CompareTag("Enemy"))
         {
-            Debug.Log("Ouch!");
-            Respawn();
+            //if (collision.collider.GetType() == typeof(EdgeCollider2D))
+            if (collision.collider is EdgeCollider2D)
+            {
+                Debug.Log("Landed on enemy");
+                collision.gameObject.SetActive(false);
+                Destroy(collision.gameObject);
+            }
+            else
+            {
+                Debug.Log("Ouch!");
+                Respawn();
+            }
         }
         if (collision.collider.CompareTag("Respawn"))
         {
@@ -93,5 +104,8 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         isJumping = false;
         movement = 0;
+
+        // foreach enemy in respawn handler
+        // set active = true;
     }
 }
