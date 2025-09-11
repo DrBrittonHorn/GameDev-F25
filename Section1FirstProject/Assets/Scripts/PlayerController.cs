@@ -16,10 +16,14 @@ public class PlayerController : MonoBehaviour
     private float speed;
     private Vector2 startPosition;
     public int coinsCollected;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
     }
 
@@ -32,6 +36,18 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector2.up * jumpHeight);
             isJumping = false;
         }
+        if (rb.linearVelocityX < 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        if (rb.linearVelocityX > 0)
+        {
+            spriteRenderer.flipX = false;
+        }
+
+        //update xVelo animator value
+        animator.SetFloat("xVelo", Mathf.Abs(rb.linearVelocityX));
+        animator.SetFloat("yVelo", rb.linearVelocityY);
     }
 
     void OnMove(InputValue value)

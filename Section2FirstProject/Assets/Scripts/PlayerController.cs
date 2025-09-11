@@ -13,10 +13,14 @@ public class PlayerController : MonoBehaviour
     private float speed;
     public float jumpForce;
     private Vector2 spawnLoc;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         spawnLoc = transform.position;
     }
 
@@ -28,9 +32,19 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce);
             isJumping = false;
         }
+        if (rb.linearVelocityX < 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else if (rb.linearVelocityX > 0)
+        {
+            spriteRenderer.flipX = false;
+        }
         // tons of mods
         //rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, speed);
         //Debug.Log("velocity: " + rb.linearVelocity.magnitude);
+        animator.SetFloat("xVelo", Mathf.Abs(rb.linearVelocityX));
+        animator.SetFloat("yVelo", rb.linearVelocityY);
     }
 
     void OnMove(InputValue value)
