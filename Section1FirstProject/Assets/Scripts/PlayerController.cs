@@ -1,4 +1,5 @@
 
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public int coinsCollected;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    public TMP_Text coinText;
+    public GameObject pausePanel;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -48,6 +51,7 @@ public class PlayerController : MonoBehaviour
         //update xVelo animator value
         animator.SetFloat("xVelo", Mathf.Abs(rb.linearVelocityX));
         animator.SetFloat("yVelo", rb.linearVelocityY);
+        coinText.text = "Coins Collected: " + coinsCollected;
     }
 
     void OnMove(InputValue value)
@@ -81,9 +85,9 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("Triggered by: " + collision.name);
         if (collision.CompareTag("Collectable"))
         {
-            coinsCollected++;
+            //coinsCollected++;
             //Debug.Log("Coins Collected: " + coinsCollected);
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
         }
     }
 
@@ -119,5 +123,19 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         isJumping = false;
         movement = 0f;
+    }
+
+    void OnPause()
+    {
+        Debug.Log("Pause action triggered");
+        Time.timeScale = 0f;
+        pausePanel.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        Debug.Log("Resume button clicked");
+        Time.timeScale = 1f;
+        pausePanel.SetActive(false);
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5263804374572896634}
   - component: {fileID: 1868287091943075182}
   - component: {fileID: 739996213071492561}
+  - component: {fileID: 1608584177476274517}
   m_Layer: 0
   m_Name: Triangle
   m_TagString: Collectible
@@ -98,7 +99,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6010725489424428033}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -137,3 +138,15 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1608584177476274517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6010725489424428033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d81f46593587d4931a0f34ab4bd4e61d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinController

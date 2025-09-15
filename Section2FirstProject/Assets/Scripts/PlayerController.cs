@@ -1,4 +1,5 @@
 
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,6 +16,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 spawnLoc;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    public int coinsCollected = 0;
+    public TMP_Text coinText;
+    public GameObject pausePanel;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -45,6 +49,7 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("velocity: " + rb.linearVelocity.magnitude);
         animator.SetFloat("xVelo", Mathf.Abs(rb.linearVelocityX));
         animator.SetFloat("yVelo", rb.linearVelocityY);
+        coinText.text = "Coins Collected: " + coinsCollected;
     }
 
     void OnMove(InputValue value)
@@ -74,14 +79,14 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    /*void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("triggered by " + collision.name);
         if (collision.CompareTag("Collectible"))
         {
             Destroy(collision.gameObject);
         }
-    }
+    }*/
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -121,5 +126,21 @@ public class PlayerController : MonoBehaviour
 
         // foreach enemy in respawn handler
         // set active = true;
+    }
+
+    void OnPause()
+    {
+        Debug.Log("Game Paused");
+        // bring up pause menu
+        pausePanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    public void Resume()
+    {
+        Debug.Log("Game Resumed");
+        // close pause menu
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
     }
 }
