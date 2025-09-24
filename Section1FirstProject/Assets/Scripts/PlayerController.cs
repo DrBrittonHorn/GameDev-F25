@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public TMP_Text coinText;
     public GameObject pausePanel;
+    public GameObject followObj;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -66,6 +67,14 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = true;
         }
+    }
+
+    void OnMouseMovement(InputValue value)
+    {
+        Vector2 mousePos = value.Get<Vector2>();
+        Vector2 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
+        followObj.transform.position = worldPos /* mouse position */;
+        Debug.Log("Mouse position: " + mousePos);
     }
 
     private bool isGrounded()
@@ -137,5 +146,14 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Resume button clicked");
         Time.timeScale = 1f;
         pausePanel.SetActive(false);
+    }
+
+    void OnBurst(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            followObj.GetComponent<ParticleSystem>().Play();
+        }
+        
     }
 }

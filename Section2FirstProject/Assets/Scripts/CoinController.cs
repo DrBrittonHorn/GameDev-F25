@@ -2,6 +2,15 @@ using UnityEngine;
 
 public class CoinController : MonoBehaviour
 {
+    float lifeTime = 2f;
+    float startTime = 10000000f;
+    void Update()
+    {
+        if (Time.time - startTime > lifeTime)
+        {
+            Destroy(gameObject);
+        }
+    }
     //public GameObject player;
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -12,7 +21,11 @@ public class CoinController : MonoBehaviour
             //PlayerController pc = collision.GetComponent<PlayerController>();
             //GameObject.Find("Player").GetComponent<PlayerController>().coinsCollected++; 
             //destroy coin
-            Destroy(gameObject);
+            GetComponent<ParticleSystem>().Play();
+            GetComponent<SpriteRenderer>().enabled = false;
+            GetComponent<Collider2D>().enabled = false;
+            startTime = Time.time;
+            //Destroy(gameObject);
         }
     }
 }
