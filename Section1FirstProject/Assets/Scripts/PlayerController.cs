@@ -22,6 +22,11 @@ public class PlayerController : MonoBehaviour
     public TMP_Text coinText;
     public GameObject pausePanel;
     public GameObject followObj;
+    //private Material material;
+    private bool isDissolving = false;
+    private MaterialPropertyBlock mpb;
+    private float dissolveAmount = 1f;
+    public Color glowColor;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,6 +34,8 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
+        //material = GetComponent<SpriteRenderer>().material;
+        mpb = new MaterialPropertyBlock();
     }
 
     void FixedUpdate()
@@ -53,6 +60,26 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("xVelo", Mathf.Abs(rb.linearVelocityX));
         animator.SetFloat("yVelo", rb.linearVelocityY);
         coinText.text = "Coins Collected: " + coinsCollected;
+
+        if (isDissolving)
+        {
+            //float dissolveAmount = material.GetFloat("_Fade");
+            spriteRenderer.GetPropertyBlock(mpb);
+            //dissolveAmount = mpb.GetFloat("_Fade");
+            dissolveAmount -= Time.deltaTime; // Increase dissolve amount over time
+            //material.SetFloat("_Fade", dissolveAmount);
+            mpb.SetFloat("_Fade", dissolveAmount);
+            mpb.SetColor("_Color", glowColor);
+            if (dissolveAmount <= 0f)
+            {
+                isDissolving = false;
+                // Load next level or show level complete UI
+                Respawn(); // For now, just respawn
+                //material.SetFloat("_Fade", 1f); // Reset dissolve for next time
+                mpb.SetFloat("_Fade", 1f);
+            }
+            spriteRenderer.SetPropertyBlock(mpb);
+        }
     }
 
     void OnMove(InputValue value)
@@ -110,8 +137,9 @@ public class PlayerController : MonoBehaviour
             if (collision.collider is EdgeCollider2D)
             {
                 Debug.Log("Jumped on an enemy!");
-                collision.gameObject.SetActive(false);
-                Destroy(collision.gameObject);
+                //collision.gameObject.SetActive(false);
+                //Destroy(collision.gameObject);
+                collision.collider.GetComponent<EnemyController>().isSetForDestruction = true;
             }
             else
             {
@@ -123,6 +151,11 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Fell off the level!");
             Respawn();
+        }
+        if (collision.collider.CompareTag("Finish"))
+        {
+            Debug.Log("Level Complete!");
+            isDissolving = true;
         }
     }
 
